@@ -44,14 +44,14 @@ module.exports = {
 
   async store(request, response) {
     try {
-      const { name, theme } = request.body;
-      const { userId } = request;
-
-      const pokemon = await repository.store(name, theme, userId);
+      const pokemons = await repository.store(request.body);
 
       return response.status(201).send({
-        data: pokemon,
-        message: 'Pokemon inserted.',
+        data: pokemons,
+        message:
+          pokemons.length === 1
+            ? 'Pokemon inserted.'
+            : `${pokemons.length} Pokemons inserted`,
       });
     } catch (error) {
       return response.status(400).send({

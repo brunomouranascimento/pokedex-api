@@ -1,17 +1,12 @@
 const mongoose = require('../../database/database');
 
 const PokemonSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    required: true,
-  },
   name: {
     type: String,
     required: true,
   },
   speciesId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Species',
+    type: Number,
     required: true,
   },
   height: {
@@ -22,7 +17,7 @@ const PokemonSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  base_experience: {
+  baseExperience: {
     type: Number,
     required: true,
   },

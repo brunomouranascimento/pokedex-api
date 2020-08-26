@@ -8,8 +8,7 @@ module.exports = {
       const totalPokemons = await Pokemon.find().countDocuments();
       const pokemons = await Pokemon.find()
         .skip((page - 1) * POKEMONS_PER_PAGE)
-        .limit(POKEMONS_PER_PAGE)
-        .populate('user');
+        .limit(POKEMONS_PER_PAGE);
       return {
         data: pokemons,
         totalCount: totalPokemons,
@@ -32,16 +31,34 @@ module.exports = {
     }
   },
 
-  async store(name, theme, userId) {
+  async store(pokemonData) {
     try {
-      const pokemon = await Pokemon.create({
-        name,
-        theme,
-      });
-
-      await pokemon.save();
-
-      return pokemon;
+      let insertedPokemon = [];
+      await Promise.all(
+        pokemonData.map(async (pokemon) => {
+          const {
+            name,
+            speciesId,
+            height,
+            weight,
+            baseExperience,
+            order,
+            isDefault,
+          } = pokemon;
+          const newPokemon = new Pokemon({
+            name,
+            speciesId,
+            height,
+            weight,
+            baseExperience,
+            order,
+            isDefault,
+          });
+          insertedPokemon.push(newPokemon);
+          await newPokemon.save();
+        })
+      );
+      return insertedPokemon;
     } catch (error) {
       return error;
     }
